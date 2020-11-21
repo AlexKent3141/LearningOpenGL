@@ -4,9 +4,16 @@
 
 float vertices[] =
 {
-  -0.5f, -0.5f, 0.0f,
-   0.5f, -0.5f, 0.0f,
-   0.0f,  0.5f, 0.0f
+   0.5f,  0.5f, 0.0f, // Upper-right corner
+   0.5f, -0.5f, 0.0f, // Bottom-right corner
+  -0.5f, -0.5f, 0.0f, // Bottom-left corner
+  -0.5f,  0.5f, 0.0f  // Upper-left corner
+};
+
+unsigned int indices[] =
+{
+  0, 1, 2, // First triangle
+  0, 2, 3  // Second triangle
 };
 
 const char* vertexShaderSource =
@@ -140,9 +147,20 @@ int main()
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+  // Generate the element buffer
+  unsigned int EBO;
+  glGenBuffers(1, &EBO);
+
+  // Copy the indices array into a buffer that OpenGL can use
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
   // Setup the vertex attribute pointers.
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
+
+  // This line turns on wireframe drawing (useful for seeing the triangles).
+//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   while (!glfwWindowShouldClose(window))
   {
@@ -155,7 +173,7 @@ int main()
 
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
 
     // Event handling and swap buffers
     glfwSwapBuffers(window);
