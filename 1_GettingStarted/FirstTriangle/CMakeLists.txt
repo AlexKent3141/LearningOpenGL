@@ -5,7 +5,7 @@ find_package(glfw3 3.3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
 include_directories(
-  "./include"
+  "../Common"
   ${GLFW3_INCLUDE_DIR}
   ${OPENGL_INCLUDE_DIRS})
 
